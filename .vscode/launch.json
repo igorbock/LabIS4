@@ -1,0 +1,44 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "BlazorIS4",
+            "type": "blazorwasm",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/BlazorIS4",
+            "env": {
+                "BROWSER": "usr/bin/brave-browser",
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
+        },
+        {
+            "name": "BackendIS4",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/BackendIS4/bin/Debug/net6.0/BackendIS4.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/BackendIS4",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "DebugAll",
+            "configurations": [ "BackendIS4", "BlazorIS4" ]
+        }
+    ]
+}

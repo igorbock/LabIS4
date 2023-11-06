@@ -5,10 +5,7 @@ public static class MigrationExtensions
     public static async Task MigrationExtensionAsync(this WebApplication _application)
     {
         //IdentityServer4 Configurations
-        var service = _application.Services.GetService<IServiceScopeFactory>();
-        if (service == null)
-            throw new Exception($"{nameof(IServiceScopeFactory)} é null");
-
+        var service = _application.Services.GetService<IServiceScopeFactory>() ?? throw new Exception($"{nameof(IServiceScopeFactory)} é null");
         using var serviceScope = service.CreateScope();
         var persistedGrantDbContext = serviceScope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>();
         persistedGrantDbContext.Database.Migrate();
@@ -43,14 +40,25 @@ public static class MigrationExtensions
             context.SaveChanges();
         }
 
-        //Usuários - ASP.NET Identity
+        //Migration Database - ASP.NET Identity
         var IS4DbContext = serviceScope.ServiceProvider.GetRequiredService<IS4DbContext>();
         if (IS4DbContext == null)
             throw new Exception($"{nameof(IS4DbContext)} é null.");
         IS4DbContext.Database.Migrate();
 
+        //Roles - ASP.NET Identity
+        var m_Roles = Config.IdentityRoles;
+        if(IS4DbContext.Roles.Any() == false)
+        {
+            foreach(var item in m_Roles)
+                IS4DbContext.Roles.Add(item);
+
+            IS4DbContext.SaveChanges();
+        }
+
+        //Usuários - ASP.NET Identity
         var userMgr = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-        var jaExisteUsuariosMigrados = userMgr.Users.Count() > 0;
+        var jaExisteUsuariosMigrados = userMgr.Users.Any();
         if (jaExisteUsuariosMigrados)
             return;
 
@@ -79,6 +87,8 @@ public static class MigrationExtensions
 
                 throw new Exception($"Ocorreu um erro com o usuário '{novoUsuario.UserName}': {errosEmString}");
             }
+
+            await userMgr.AddToRoleAsync(novoUsuario, "ADM");
         }
     }
 }

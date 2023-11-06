@@ -14,7 +14,7 @@ var MigrationsAssembly = typeof(Program).Assembly.GetName().Name;
 var ConnectionString = "Host=isabelle.db.elephantsql.com;Port=5432;Database=yezkrefj;User Id=yezkrefj;Password=kiLj5HdtfNdyK2dp9t1o4LmgbI6t7p6T";
 #if DEBUG
 {
-    ConnectionString = "Host=localhost;Port=5433;Database=identity;User Id=postgres;Password=teste";
+    ConnectionString = "Host=localhost;Port=5432;Database=identity;User Id=postgres;Password=teste";
 }
 #endif
 
@@ -27,7 +27,8 @@ var m_IdentityServerBuilder = builder.Services.AddIdentityServer();
 
 #if DEBUG
 {
-    m_IdentityServerBuilder.CMX_ConfigurarDEBUG();
+    m_IdentityServerBuilder.CMX_ConfigurarRELEASE(ConnectionString, MigrationsAssembly!);
+    //m_IdentityServerBuilder.CMX_ConfigurarDEBUG();
 }
 #else
 {
@@ -48,6 +49,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+await app.MigrationExtensionAsync();
 
 #if !DEBUG
 {
