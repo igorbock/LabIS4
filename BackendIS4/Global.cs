@@ -1,8 +1,7 @@
-﻿global using BackendIS4;
-global using BackendIS4.Extensions;
+﻿global using BackendIS4.Extensions;
 global using BackendIS4.Context;
 global using BackendIS4.Interfaces;
-global using BackendIS4.Context.Models;
+global using BackendIS4.Requirements;
 
 global using IdentityServer4;
 global using IdentityServer4.Services;
@@ -18,9 +17,12 @@ global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 global using Microsoft.AspNetCore.Identity;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.IdentityModel.Tokens;
 
 global using LibIS4.Models;
 
 global using System.Security.Claims;
+global using System.Text;
 
 global using IdentityModel;

@@ -20,6 +20,8 @@ public class IS4AuthenticationStateProvider : AuthenticationStateProvider
 
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
+        await Task.Delay(2000);
+
         var m_TokenHandler = new JwtSecurityTokenHandler();
 
         var m_ClaimsIdentity = new ClaimsIdentity();
@@ -29,6 +31,9 @@ public class IS4AuthenticationStateProvider : AuthenticationStateProvider
             return new AuthenticationState(m_ClaimsPrincipal);
 
         var m_TokenJWT = m_TokenHandler.ReadJwtToken(await c_LocalStorage!.GetItemAsStringAsync(c_TOKEN));
+        if(m_TokenJWT.ValidTo < DateTime.UtcNow)
+            return new AuthenticationState(m_ClaimsPrincipal);
+
         return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(m_TokenJWT.Claims, "IS4Authentication")));
     }
 
@@ -37,7 +42,7 @@ public class IS4AuthenticationStateProvider : AuthenticationStateProvider
         var m_Resultado = await c_HttpClient!.RequestPasswordTokenAsync(new PasswordTokenRequest
         {
             Address = "connect/token",
-            ClientId = "ClientLab",
+            ClientId = "ClientLab2",
             ClientSecret = "lab_segredo",
             Scope = "API-LAB",
             UserName = p_Usuario,

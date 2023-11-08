@@ -1,7 +1,4 @@
-﻿using IdentityModel.Client;
-using System.IdentityModel.Tokens.Jwt;
-
-namespace BackendIS4.Controllers;
+﻿namespace BackendIS4.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -30,9 +27,9 @@ public class UsuariosController : Controller, IUsuariosController
         return result.ToString();
     }
 
-    //[Authorize(Policy = "Administrador")]
-
-    [HttpGet("todos")]
+    [HttpGet]
+    [Authorize(Policy = "IsAdm")]
+    [Route("todos")]
     public IEnumerable<IdentityUser> Read() => _UserManager.Users;
 
     [HttpGet]
@@ -64,8 +61,7 @@ public class UsuariosController : Controller, IUsuariosController
         if (string.IsNullOrWhiteSpace(name))
             throw new Exception("Nome está null!");
 
-        var user = await _UserManager.FindByNameAsync(name);
-        if (user == null) throw new Exception("Usuário não existe!");
+        var user = await _UserManager.FindByNameAsync(name) ?? throw new Exception("Usuário não existe!");
         var result = await _UserManager.DeleteAsync(user);
         return result.ToString();
     }

@@ -6,13 +6,14 @@
     [Inject]
     public NavigationManager? NavigationManager { get; set; }
     [Inject]
-    public IS4AuthenticationStateProvider? C_IS4AuthenticationProvider { get; set; }
+    public AuthenticationStateProvider? C_IS4AuthenticationProvider { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await Task.Delay(TimeSpan.FromSeconds(3));
 
-        await C_IS4AuthenticationProvider!.Logout();
+        var m_StateProvider = C_IS4AuthenticationProvider as IS4AuthenticationStateProvider;
+        await m_StateProvider!.Logout();
         NavigationManager!.NavigateTo("/");
     }
 }

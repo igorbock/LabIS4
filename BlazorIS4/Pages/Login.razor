@@ -19,7 +19,7 @@
     }
 
     [Inject]
-    public IS4AuthenticationStateProvider? C_StateProvider { get; set; }
+    public AuthenticationStateProvider? C_StateProvider { get; set; }
     [Inject]
     public NavigationManager? C_NavigationManager { get; set; }
 
@@ -28,7 +28,8 @@
 
     public async Task CM_FazerLogin()
     {
-        await C_StateProvider!.LoginAsync(Usuario!.Nome!, Usuario.Senha!);
+        var m_StateProvider = C_StateProvider as IS4AuthenticationStateProvider;
+        await m_StateProvider!.LoginAsync(Usuario!.Nome!, Usuario.Senha!);
         C_NavigationManager!.NavigateTo("/");
     }
 }

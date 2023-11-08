@@ -36,6 +36,27 @@ var m_IdentityServerBuilder = builder.Services.AddIdentityServer();
 }
 #endif
 
+var m_JWK = File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "tempkey.jwk"));
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(m_JWK)),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddScoped<IAuthorizationHandler, IsAdmHandler>();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("IsAdm", builder => builder.AddRequirements(new IsAdmRequirement()));
+});
+
 var app = builder.Build();
 
 app.UseCors(opt => opt

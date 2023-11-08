@@ -8,11 +8,7 @@
             "name": "BlazorIS4",
             "type": "blazorwasm",
             "request": "launch",
-            "cwd": "${workspaceFolder}/BlazorIS4",
-            "env": {
-                "BROWSER": "usr/bin/brave-browser",
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            }
+            "cwd": "${workspaceFolder}/BlazorIS4"
         },
         {
             "name": "BackendIS4",

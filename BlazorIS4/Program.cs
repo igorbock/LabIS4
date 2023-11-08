@@ -33,8 +33,7 @@ builder.Services.AddBlazoredLocalStorage();
 #endif
 builder.Services.AddScoped<IUsuariosService, UsuariosService>();
 
-builder.Services.AddScoped<IS4AuthenticationStateProvider>();
-builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<IS4AuthenticationStateProvider>());
 builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AuthenticationStateProvider, IS4AuthenticationStateProvider>();
 
 await builder.Build().RunAsync();
